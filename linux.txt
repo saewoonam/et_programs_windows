@@ -1,0 +1,13 @@
+attrs==19.3.0
+Automat==20.2.0
+bleak==0.6.4
+certifi==2020.4.5.1
+constantly==15.1.0
+hyperlink==19.0.0
+idna==2.9
+incremental==17.5.0
+PyHamcrest==2.0.2
+six==1.15.0
+Twisted==20.3.0
+txdbus==1.1.1
+zope.interface==5.1.0
