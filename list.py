@@ -29,20 +29,16 @@ async def get_et_list():
         if 'uuids' in d.metadata:
             # print(d.metadata['uuids'])
             if service_uuid in d.metadata['uuids']:
-                # print(d.name)
+                print(d.name)
                 et_devices.append(d)
     return et_devices
 
 async def run():
-    while True:
         devices = await get_et_list()
         print(len(devices))
-        if len(devices)==6:
-            break
-    for d in devices:
-        print(d.name)
-
+        return devices
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    while True:
-        loop.run_until_complete(run())
+    devices =  loop.run_until_complete(run())
+    # devices =  asyncio.run(run())
+    print(devices)
