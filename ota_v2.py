@@ -93,21 +93,19 @@ def data_handler(sender, data, client=None, total_expected=0):
 
 
 async def run(device_number, number_to_find):
+    print("run number_to_find", number_to_find)
     global g_client, g_total_expected, g_get_idx, g_ready, g_fp_out
     #devices = await discover()
     not_found = True
     while not_found:
         print("Trying to find NIST ET devices")
-        et_devices = await list_et.get_et_list()
+        et_devices = await list_et.get_et_list(number_to_find)
         # print(et_devices)
-        if len(et_devices)>=number_to_find:
-            name = 'NIST%04d'%device_number
-            for device in et_devices:
-                if device.name == name:
-                    not_found = False
-                    break
-        else:
-            print(f"Found {len(et_devices)}/{number_to_find}")
+        name = 'NIST%04d'%device_number
+        for device in et_devices:
+            if device.name == name:
+                not_found = False
+                break
     print(device.name, device.address)
     # async with BleakClient(device.address) as client:
     if True:
@@ -170,5 +168,6 @@ if __name__ == '__main__':
         number_to_find = 4
     global loop
     loop = asyncio.get_event_loop()
+    print(number_to_find)
     print("looking for NIST ET bluetooth devices")
     loop.run_until_complete(run(device_number, number_to_find))

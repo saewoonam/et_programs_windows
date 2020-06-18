@@ -58,7 +58,7 @@ async def get_client(device):
     return client
 
 async def put_rw(client, b):
-    await client.write_gatt_char(rw_uuid, bytearray(b))
+    await client.write_gatt_char(rw_uuid, b)
 
 async def get_rw(client):
     return await client.read_gatt_char(rw_uuid)
@@ -85,22 +85,19 @@ async def get_info(client):
     return c, count, g_data
 
 async def run(dev_num=5, num=4, command=None):
+    et_devices = await get_et_list(num)
     name = "NIST%04d"%dev_num
-    not_found = True
-    while not_found:
-        et_devices = await get_et_list(num)
-        for device in et_devices:
-            if device.name == name:
-                not_found = False
-                break
-        if not_found:
-            print(f"can't find the device: {name} ")
-            print("trying again")
-            # print(f"can't find the device: {name}, exiting")
-            # sys.exit(1)
+
+    for device in et_devices:
+        if device.name == name:
+            not_found = False
+            break
+    if not_found:
+        print("can't find the device, exiting")
+        sys.exit(1)
     client = await get_client(device)
     if command is not None:
-        await put(client, command)
+        await put_rw(client, command)
 
     results = await get_info(client)
     if results[2]==b'\x00':
