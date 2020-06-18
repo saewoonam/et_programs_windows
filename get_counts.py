@@ -37,18 +37,19 @@ async def run():
     print("Trying to find NIST ET devices")
     et_devices = await list_et.get_et_list()
 
-    name = 'NIST0005'
-
-    for device in et_devices:
-        if device.name == name:
-            not_found = False
-            break
-    result = await get_counts(device)
-    print(device, result)
+    # name = 'NIST0005'
+    #
+    # for device in et_devices:
+    #     if device.name == name:
+    #         not_found = False
+    #         break
+    # result = await get_counts(device)
+    # print(device, result)
     for device in et_devices:
         print('*'*80)
         print(f"trying to fetch from {device.name}")
-        result = await get_counts(device)
+        while True:
+            result = await get_counts(device)
         print(device.name, result)
 loop = asyncio.get_event_loop()
 loop.run_until_complete(run())
