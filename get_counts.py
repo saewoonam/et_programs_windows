@@ -15,7 +15,7 @@ from bleak import BleakClient
 from bleak import _logger as logger
 from bleak.uuids import uuid16_dict
 
-import list
+import list_et
 
 service_uuid = '7b183224-9168-443e-a927-7aeea07e8105'
 count_uuid = '292bd3d2-14ff-45ed-9343-55d125edb721'
@@ -35,7 +35,7 @@ async def get_counts(device):
 async def run():
     #devices = await discover()
     print("Trying to find NIST ET devices")
-    et_devices = await list.get_et_list()
+    et_devices = await list_et.get_et_list()
 
     name = 'NIST0005'
 
@@ -47,7 +47,7 @@ async def run():
     print(device, result)
     for device in et_devices:
         print('*'*80)
-        print(f"trying to fetch from f{device.name}")
+        print(f"trying to fetch from {device.name}")
         result = await get_counts(device)
         print(device.name, result)
 loop = asyncio.get_event_loop()
