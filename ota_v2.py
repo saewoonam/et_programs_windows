@@ -8,10 +8,10 @@ from bleak.uuids import uuid16_dict
 from consolemenu import *
 from consolemenu.items import *
 
-import list
+import list_et
 import datetime
 import time
-
+import sys
 service_uuid = '7b183224-9168-443e-a927-7aeea07e8105'
 count_uuid = '292bd3d2-14ff-45ed-9343-55d125edb721'
 rw_uuid = '56cd7757-5f47-4dcd-a787-07d648956068'
@@ -92,22 +92,22 @@ def data_handler(sender, data, client=None, total_expected=0):
         # )
 
 
-async def run():
+async def run(device_number, number_to_find):
     global g_client, g_total_expected, g_get_idx, g_ready, g_fp_out
     #devices = await discover()
     not_found = True
     while not_found:
         print("Trying to find NIST ET devices")
-        et_devices = await list.get_et_list()
+        et_devices = await list_et.get_et_list()
         # print(et_devices)
-
-        name = 'NIST-GEN'
-
-        for device in et_devices:
-            if device.name == name:
-                not_found = False
-                break
-
+        if len(et_devices)>=number_to_find:
+            name = 'NIST%04d'%device_number
+            for device in et_devices:
+                if device.name == name:
+                    not_found = False
+                    break
+        else:
+            print(f"Found {len(et_devices)}/{number_to_find}")
     print(device.name, device.address)
     # async with BleakClient(device.address) as client:
     if True:
@@ -158,5 +158,17 @@ async def run():
                 await asyncio.sleep(0.01)
         await client.stop_notify(data_uuid)
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(run())
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print("Not enough arguments")
+        sys.exit(1)
+    elif len(sys.argv) >= 3:
+        device_number = int(sys.argv[1])
+        number_to_find = int(sys.argv[2])
+    elif len(sys.argv) == 2:
+        device_number = int(sys.argv[1])
+        number_to_find = 4
+    global loop
+    loop = asyncio.get_event_loop()
+    print("looking for NIST ET bluetooth devices")
+    loop.run_until_complete(run(device_number, number_to_find))

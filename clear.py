@@ -15,6 +15,6 @@ if __name__ == '__main__':
     global loop
     loop = asyncio.get_event_loop()
     print("looking for NIST ET bluetooth devices")
-    devices = loop.run_until_complete(info.run(device_number, number_to_find, b'w'))
+    devices = loop.run_until_complete(info.run(device_number, number_to_find, b'c'))
     # devices =  asyncio.run(run())
     # print(devices)
