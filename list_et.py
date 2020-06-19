@@ -25,7 +25,7 @@ async def get_et_list(num=4):
             if 'uuids' in d.metadata:
                 # print(d.metadata['uuids'])
                 if service_uuid in d.metadata['uuids']:
-                    print(d.name)
+                    print(d.name, d.address)
                     et_devices.append(d)
         if len(et_devices)>= num:
             found = True

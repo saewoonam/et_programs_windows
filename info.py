@@ -58,7 +58,7 @@ async def get_client(device):
     return client
 
 async def put_rw(client, b):
-    await client.write_gatt_char(rw_uuid, b)
+    await client.write_gatt_char(rw_uuid, bytearray(b))
 
 async def get_rw(client):
     return await client.read_gatt_char(rw_uuid)
@@ -106,8 +106,9 @@ async def run(dev_num=5, num=4, command=None):
         write_status = "ON"
     else:
         write_status = "??"
-
+  
     print(f"{device.name}: last_rw: {results[0]}, counts: {results[1]}, write_status: {write_status}")
+    await client.disconnect()
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
