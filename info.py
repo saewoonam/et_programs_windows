@@ -44,9 +44,10 @@ def data_handler(sender, data):
 
 async def get_client(device):
     if True:
-        client = BleakClient(device.address)
+        client = BleakClient('58:8E:81:A5:4D:9D')
+        # client = BleakClient(device.address)
         connected = False
-        print(f"Try to connect to {device.name}: {device.address}")
+        # print(f"Try to connect to {device.name}: {device.address}")
         while not connected:
             try: 
                 connected = await client.connect()
@@ -85,16 +86,18 @@ async def get_info(client):
     return c, count, g_data
 
 async def run(dev_num=5, num=4, command=None):
-    et_devices = await get_et_list(num)
-    name = "NIST%04d"%dev_num
+    device = None
+    if False:
+        et_devices = await get_et_list(num)
+        name = "NIST%04d"%dev_num
 
-    for device in et_devices:
-        if device.name == name:
-            not_found = False
-            break
-    if not_found:
-        print("can't find the device, exiting")
-        sys.exit(1)
+        for device in et_devices:
+            if device.name == name:
+                not_found = False
+                break
+        if not_found:
+            print("can't find the device, exiting")
+            sys.exit(1)
     client = await get_client(device)
     if command is not None:
         await put_rw(client, command)
