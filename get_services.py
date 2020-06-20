@@ -26,7 +26,7 @@ def data_handler(sender, data):
     g_data = data
     g_xfer_done = True
 
-async def print_services(mac_addr: str, loop: asyncio.AbstractEventLoop):
+async def run(mac_addr: str, loop: asyncio.AbstractEventLoop):
     global g_data, g_xfer_done
     async with BleakClient(mac_addr, loop=loop) as client:
         svcs = await client.get_services()
@@ -38,7 +38,7 @@ async def print_services(mac_addr: str, loop: asyncio.AbstractEventLoop):
         print(c, count, flush=True)
         await client.start_notify(data_uuid, data_handler) # , kw)
         print("Started notify")
-        await client.write_gatt_char(rw_uuid, b'I')
+        await client.write_gatt_char(rw_uuid, bytearray(b'I'))
         print("sent I", flush=True)
         g_xfer_done = False
         while not g_xfer_done:
@@ -48,4 +48,4 @@ async def print_services(mac_addr: str, loop: asyncio.AbstractEventLoop):
 
 mac_addr = ('58:8E:81:A5:4D:9D')
 loop = asyncio.get_event_loop()
-loop.run_until_complete(print_services(mac_addr, loop))
+loop.run_until_complete(run(mac_addr, loop))
